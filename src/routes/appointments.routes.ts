@@ -5,6 +5,11 @@ import AppointmentRepository from '../repositories/appointments.repository';
 const routes = Router();
 const repository = new AppointmentRepository();
 
+routes.get('/', (req, res) => {
+  const appointments = repository.all();
+  return res.json(appointments);
+});
+
 routes.post('/', (req, res) => {
   const { provider, date } = req.body;
   const parsedDate = startOfHour(parseISO(date));
