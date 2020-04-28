@@ -10,4 +10,10 @@ export default class Appointment {
 
   @Column('timestamp with time zone')
   date: Date;
+
+  @Column('timestamp')
+  created_at: Date;
+
+  @Column('timestamp')
+  updated_at: Date;
 }
