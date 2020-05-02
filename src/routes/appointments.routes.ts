@@ -11,13 +11,15 @@ routes.use(ensureAuthenticated);
 
 routes.get('/', async (req, res) => {
   const repository = getCustomRepository(AppointmentRepository);
-  const appointments = await repository.find();
+  const { id: provider_id } = req.user;
+  const appointments = await repository.find({ where: { provider_id } });
   return res.json(appointments);
 });
 
 routes.post('/', async (req, res) => {
   try {
-    const { provider_id, date } = req.body;
+    const { date } = req.body;
+    const { id: provider_id } = req.user;
     const parsedDate = parseISO(date);
     const createAppointment = new CreateService();
     const appointment = await createAppointment.execute({
