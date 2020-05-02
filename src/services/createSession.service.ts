@@ -2,6 +2,7 @@ import User from '../models/user.model';
 import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import authConfig from '../config/auth';
 
 interface Request {
   email: string;
@@ -25,9 +26,9 @@ export default class CreateSessionService {
     }
     delete user.password;
 
-    const token = sign({}, '2682dcd5ff94d9cbc22a077563959c49', {
+    const token = sign({}, authConfig.jwt.secret, {
       subject: user.id,
-      expiresIn: '1d',
+      expiresIn: authConfig.jwt.expiresIn,
     });
 
     return { user, token };
