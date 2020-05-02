@@ -1,6 +1,7 @@
 import User from '../models/user.model';
 import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 
 interface Request {
   email: string;
@@ -8,6 +9,7 @@ interface Request {
 }
 interface Response {
   user: User;
+  token: string;
 }
 
 export default class CreateSessionService {
@@ -17,13 +19,17 @@ export default class CreateSessionService {
     if (!user) {
       throw new Error('Incorrect email/password combination');
     }
-
     const passwordMatched = await compare(password, user.password);
     if (!passwordMatched) {
       throw new Error('Incorrect email/password combination');
     }
-
     delete user.password;
-    return { user };
+
+    const token = sign({}, '2682dcd5ff94d9cbc22a077563959c49', {
+      subject: user.id,
+      expiresIn: '1d',
+    });
+
+    return { user, token };
   }
 }
