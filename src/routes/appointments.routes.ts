@@ -17,19 +17,15 @@ routes.get('/', async (req, res) => {
 });
 
 routes.post('/', async (req, res) => {
-  try {
-    const { date } = req.body;
-    const { id: provider_id } = req.user;
-    const parsedDate = parseISO(date);
-    const createAppointment = new CreateService();
-    const appointment = await createAppointment.execute({
-      date: parsedDate,
-      provider_id,
-    });
-    return res.json(appointment);
-  } catch (err) {
-    return res.status(400).json({ error: err.message });
-  }
+  const { date } = req.body;
+  const { id: provider_id } = req.user;
+  const parsedDate = parseISO(date);
+  const createAppointment = new CreateService();
+  const appointment = await createAppointment.execute({
+    date: parsedDate,
+    provider_id,
+  });
+  return res.json(appointment);
 });
 
 export default routes;
