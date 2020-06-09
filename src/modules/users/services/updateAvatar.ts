@@ -10,7 +10,7 @@ interface Request {
   avatar_filename: string;
 }
 
-export default class UpdateAvatarService {
+export default class UpdateAvatar {
   public async execute({ user_id, avatar_filename }: Request): Promise<User> {
     const userRepository = getRepository(User);
 

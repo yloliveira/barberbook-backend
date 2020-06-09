@@ -14,7 +14,7 @@ interface Response {
   token: string;
 }
 
-export default class CreateSessionService {
+export default class Create {
   public async execute({ email, password }: Request): Promise<Response> {
     const repository = getRepository(User);
     const user = await repository.findOne({ where: { email } });

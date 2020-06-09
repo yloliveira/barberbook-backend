@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import CreateUserService from '@modules/users/services/create';
+import CreateService from '@modules/users/services/create';
 import UpdateAvatarService from '@modules/users/services/updateAvatar';
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensureAuthenticated';
 import multer from 'multer';
@@ -9,7 +9,7 @@ const routes = Router();
 const upload = multer(uploadConfig);
 
 routes.post('/', async (req, res) => {
-  const createUser = new CreateUserService();
+  const createUser = new CreateService();
   const user = await createUser.execute(req.body);
   delete user.password;
   return res.json(user);
