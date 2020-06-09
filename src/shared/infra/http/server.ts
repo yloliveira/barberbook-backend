@@ -1,8 +1,8 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import 'express-async-errors';
 import routes from './routes';
-import './database';
-import updloadConfig from './config/upload';
+import '@shared/infra/typeorm';
+import updloadConfig from '@config/upload';
 import errorHandler from './middlewares/errorHandler';
 
 const app = express();
