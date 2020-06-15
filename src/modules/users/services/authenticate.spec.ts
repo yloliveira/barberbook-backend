@@ -9,7 +9,7 @@ describe('Authenticate', () => {
     const create = new Create(repository);
     const authenticate = new Authenticate(repository);
 
-    await create.execute({
+    const user = await create.execute({
       name: 'valid_name',
       email: 'valid@email.com',
       password: 'valid_password',
@@ -22,9 +22,7 @@ describe('Authenticate', () => {
 
     expect(session).toHaveProperty('token');
     expect(session).toHaveProperty('user');
-    expect(session.user).toHaveProperty('id');
-    expect(session.user).toHaveProperty('email');
-    expect(session.user.email).toBe('valid@email.com');
+    expect(session.user).toEqual(user);
   });
 
   test('should not be able to authenticate a unregistered user', async () => {
