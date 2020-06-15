@@ -2,12 +2,14 @@ import Create from './create';
 import Authenticate from './authenticate';
 import Repository from '../mocks/Repository';
 import AppError from '@shared/errors/appError';
+import HashProvider from '../mocks/HashProvider';
 
 describe('Authenticate', () => {
   test('should be able to authenticate a registered user', async () => {
     const repository = new Repository();
-    const create = new Create(repository);
-    const authenticate = new Authenticate(repository);
+    const hashProvider = new HashProvider();
+    const create = new Create(repository, hashProvider);
+    const authenticate = new Authenticate(repository, hashProvider);
 
     const user = await create.execute({
       name: 'valid_name',
@@ -27,7 +29,8 @@ describe('Authenticate', () => {
 
   test('should not be able to authenticate a unregistered user', async () => {
     const repository = new Repository();
-    const authenticate = new Authenticate(repository);
+    const hashProvider = new HashProvider();
+    const authenticate = new Authenticate(repository, hashProvider);
     const unregisteredUser = {
       email: 'unregistered@email.com',
       password: 'unregistered_password',
@@ -40,8 +43,9 @@ describe('Authenticate', () => {
 
   test('should not be able to authenticate with wrong password', async () => {
     const repository = new Repository();
-    const create = new Create(repository);
-    const authenticate = new Authenticate(repository);
+    const hashProvider = new HashProvider();
+    const create = new Create(repository, hashProvider);
+    const authenticate = new Authenticate(repository, hashProvider);
 
     await create.execute({
       name: 'valid_name',
