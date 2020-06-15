@@ -39,4 +39,34 @@ describe('UpdateAvatar', () => {
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
+
+  test('should delete old avatar when updating new one', async () => {
+    const repository = new Repository();
+    const storage = new StorageProvider();
+    const hashProvider = new HashProvider();
+    const create = new Create(repository, hashProvider);
+    const updateAvatar = new UpdateAvatar(repository, storage);
+
+    const deleteFile = spyOn(storage, 'deleteFile');
+
+    const user = await create.execute({
+      name: 'valid_name',
+      email: 'valid@email.com',
+      password: 'valid_password',
+    });
+
+    await updateAvatar.execute({
+      user_id: user.id,
+      avatar_filename: 'valid_filename.jpg',
+    });
+
+    const avatar2 = await updateAvatar.execute({
+      user_id: user.id,
+      avatar_filename: 'valid_filename2.jpg',
+    });
+
+    expect(deleteFile).toHaveBeenCalledWith('valid_filename.jpg');
+
+    expect(avatar2).toEqual({ ...user, avatar: 'valid_filename2.jpg' });
+  });
 });
