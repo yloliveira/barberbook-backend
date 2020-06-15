@@ -3,6 +3,7 @@ import Repository from '@modules/users/infra/typeorm/repositories';
 import CreateService from '@modules/users/services/create';
 import UpdateAvatarService from '@modules/users/services/updateAvatar';
 import HashProvider from '@modules/users/providers/Hash/Bcrypt';
+import StorageProvider from '@shared/providers/Storage/DiskStorage';
 
 export default class Controller {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -17,7 +18,8 @@ export default class Controller {
 
   public async updateAvatar(req: Request, res: Response): Promise<Response> {
     const repository = new Repository();
-    const updateUserAvatar = new UpdateAvatarService(repository);
+    const storage = new StorageProvider();
+    const updateUserAvatar = new UpdateAvatarService(repository, storage);
     const user = await updateUserAvatar.execute({
       user_id: req.user.id,
       avatar_filename: req.file.filename,
