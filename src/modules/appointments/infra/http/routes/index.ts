@@ -8,15 +8,15 @@ const routes = Router();
 
 routes.use(ensureAuthenticated);
 
-const repository = new Repository();
-
 routes.get('/', async (req, res) => {
+  const repository = new Repository();
   const { id: provider_id } = req.user;
   const appointments = await repository.findByProviderId(provider_id);
   return res.json(appointments);
 });
 
 routes.post('/', async (req, res) => {
+  const repository = new Repository();
   const { date } = req.body;
   const { id: provider_id } = req.user;
   const parsedDate = parseISO(date);
