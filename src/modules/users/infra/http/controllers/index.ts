@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import Repository from '@modules/users/infra/typeorm/repositories';
 import CreateService from '@modules/users/services/create';
 import UpdateAvatarService from '@modules/users/services/updateAvatar';
+import HashProvider from '@modules/users/providers/Hash/Bcrypt';
 
 export default class Controller {
   public async create(req: Request, res: Response): Promise<Response> {
     const repository = new Repository();
-    const createUser = new CreateService(repository);
+    const hashProvider = new HashProvider();
+
+    const createUser = new CreateService(repository, hashProvider);
     const user = await createUser.execute(req.body);
     delete user.password;
     return res.json(user);

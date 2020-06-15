@@ -1,7 +1,7 @@
-import { hash } from 'bcryptjs';
 import AppError from '@shared/errors/appError';
 import User from '@modules/users/infra/typeorm/entities';
 import IRepository from '@modules/users/interfaces/IRepository';
+import IHashProvider from '@modules/users/interfaces/IHashProvider';
 
 interface IRequest {
   name: string;
@@ -10,7 +10,10 @@ interface IRequest {
 }
 
 export default class Create {
-  constructor(private repository: IRepository) {}
+  constructor(
+    private repository: IRepository,
+    private hashProvider: IHashProvider,
+  ) {}
 
   async execute({ name, email, password }: IRequest): Promise<User> {
     const checkUserExists = await this.repository.findByEmail(email);
@@ -18,7 +21,7 @@ export default class Create {
       throw new AppError('Email address already used');
     }
 
-    const hashedPassword = await hash(password, 8);
+    const hashedPassword = await this.hashProvider.generate(password);
 
     const user = await this.repository.create({
       name,
