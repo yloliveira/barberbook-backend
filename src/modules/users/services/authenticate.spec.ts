@@ -1,6 +1,7 @@
 import Create from './create';
 import Authenticate from './authenticate';
 import Repository from '../mocks/Repository';
+import AppError from '@shared/errors/appError';
 
 describe('Authenticate', () => {
   test('should be able to authenticate a registered user', async () => {
@@ -24,5 +25,18 @@ describe('Authenticate', () => {
     expect(session.user).toHaveProperty('id');
     expect(session.user).toHaveProperty('email');
     expect(session.user.email).toBe('valid@email.com');
+  });
+
+  test('should not be able to authenticate a unregistered user', async () => {
+    const repository = new Repository();
+    const authenticate = new Authenticate(repository);
+    const unregisteredUser = {
+      email: 'unregistered@email.com',
+      password: 'unregistered_password',
+    };
+
+    expect(authenticate.execute(unregisteredUser)).rejects.toBeInstanceOf(
+      AppError,
+    );
   });
 });
