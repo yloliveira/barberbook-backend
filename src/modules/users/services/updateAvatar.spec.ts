@@ -26,4 +26,17 @@ describe('UpdateAvatar', () => {
 
     expect(avatar).toEqual({ ...user, avatar: 'valid_filename.jpg' });
   });
+
+  test('should not be able to update avatar from non existing user', async () => {
+    const repository = new Repository();
+    const storage = new StorageProvider();
+    const updateAvatar = new UpdateAvatar(repository, storage);
+
+    expect(
+      updateAvatar.execute({
+        user_id: 'invalid_id',
+        avatar_filename: 'valid_filename.jpg',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
 });
