@@ -1,7 +1,15 @@
 import IStorageProvider from '../interfaces/IStorageProvider';
 
 export default class StorageProvider implements IStorageProvider {
-  public async saveFile(file: string): Promise<string> {}
+  private storage: string[] = [];
 
-  public async deleteFile(file: string): Promise<void> {}
+  public async saveFile(file: string): Promise<string> {
+    this.storage.push(file);
+    return file;
+  }
+
+  public async deleteFile(file: string): Promise<void> {
+    const index = this.storage.findIndex(storageFile => storageFile === file);
+    this.storage.splice(index, 1);
+  }
 }
