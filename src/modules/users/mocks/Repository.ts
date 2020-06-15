@@ -19,6 +19,7 @@ export default class UserRepository implements IRepository {
   public async create(userData: ICreateUser): Promise<User> {
     const user = new User();
     Object.assign(user, { id: uuid(), ...userData });
+    this.users.push(user);
     return user;
   }
 
